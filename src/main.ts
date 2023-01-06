@@ -7,7 +7,7 @@ import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 
 const scene = new THREE.Scene() // 场景
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000) // 透视摄像机
-camera.position.set(0.0, 0.4, 1.0); // 设置相机的位置
+camera.position.set(0, 0, 20); // 设置相机的位置
 const renderer = new THREE.WebGLRenderer({ antialias: true }) // 渲染器
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement) // 放到页面里
@@ -16,10 +16,29 @@ const directionLight = new THREE.DirectionalLight(0xffffff, 0.4); // 平行光
 scene.add(directionLight);
 
 let mixer: AnimationMixer;
-let donuts: Group
-new GLTFLoader().load('../resources/models/donuts.glb', (gltf) => {
+let zhanguan: Group
+new GLTFLoader().load('../resources/models/zhanguan.glb', (gltf) => {
   scene.add(gltf.scene);
-  donuts = gltf.scene;
+  zhanguan = gltf.scene;
+
+  gltf.scene.traverse((child) => {
+    // child.castShadow = true;
+    // child.receiveShadow = true;
+    if (child.name === '2023') {
+      const video = document.createElement('video');
+      video.src = "./resources/yanhua.mp4";
+      video.muted = true;
+      video.autoplay = true;
+      video.loop = true;
+      video.play();
+
+      const videoTexture = new THREE.VideoTexture(video);
+      const videoMaterial = new THREE.MeshBasicMaterial({ map: videoTexture });
+
+      child.material = videoMaterial;
+    }
+  })
+
   mixer = new THREE.AnimationMixer(gltf.scene); // 动画混合器
   const clips = gltf.animations; // 播放所有动画
   clips.forEach(function (clip) {
@@ -48,9 +67,6 @@ new RGBELoader()
 function animate() {
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
-  if (donuts) {
-    donuts.rotation.y += 0.01; // 让 donuts 旋转
-  }
   if (mixer) {
     mixer.update(0.02); // 推进混合器时间并更新动画
   }
