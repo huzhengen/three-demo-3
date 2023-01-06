@@ -1,0 +1,20 @@
+{
+  "name": "three-demo-2",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "buildToGitHub": "tsc && vite build --base=/three-demo-2/dist/",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@types/three": "^0.146.0",
+    "typescript": "^4.9.3",
+    "vite": "^4.0.0"
+  },
+  "dependencies": {
+    "three": "^0.147.0"
+  }
+}
